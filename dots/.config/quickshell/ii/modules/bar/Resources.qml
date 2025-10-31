@@ -45,6 +45,32 @@ MouseArea {
             warningThreshold: Config.options.bar.resources.cpuWarningThreshold
         }
 
+        // === CUSTOM MODIFICATION START: Intel GPU Resource Display ===
+        Resource {
+            iconName: "empty_dashboard"
+            percentage: ResourceUsage.iGpuUsage
+            shown: (Config.options.bar.resources.alwaysShowGpu || 
+                !(MprisController.activePlayer?.trackTitle?.length > 0) ||
+                root.alwaysShowAllResources) && ResourceUsage.iGpuAvailable && (Config.options.bar.resources.gpuLayout == 1)
+            Layout.leftMargin: shown ? 6 : 0
+            warningThreshold: Config.options.bar.resources.gpuWarningThreshold
+        }
+        // === CUSTOM MODIFICATION END: Intel GPU Resource Display ===
+
+        // === CUSTOM MODIFICATION START: Network Speed Resource Display ===
+        Resource {
+            iconName: "network_check"
+            // Cast to int percentage with safety check (100% = 50MB/s total)
+            percentage: Math.round((ResourceUsage.networkTotalSpeed || 0) / (50 * 1024 * 1024) * 100)
+            shown: Config.options.bar.networkSpeed.enable && (
+                !(MprisController.activePlayer?.trackTitle?.length > 0) ||
+                root.alwaysShowAllResources
+            )
+            Layout.leftMargin: shown ? 6 : 0
+            warningThreshold: 95 // Only warn at 95% (very high usage)
+        }
+        // === CUSTOM MODIFICATION END: Network Speed Resource Display ===
+
     }
 
     ResourcesPopup {

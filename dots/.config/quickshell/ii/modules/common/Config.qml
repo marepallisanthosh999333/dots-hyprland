@@ -207,9 +207,16 @@ Singleton {
                 property JsonObject resources: JsonObject {
                     property bool alwaysShowSwap: true
                     property bool alwaysShowCpu: true
+                    // === CUSTOM MODIFICATION START: GPU Configuration ===
+                    property bool alwaysShowGpu: true
+                    property int gpuLayout: 1 // 0: DGPU | 1: IGPU | 2: Hybrid (Intel Iris Xe = 1)
+                    // === CUSTOM MODIFICATION END: GPU Configuration ===
                     property int memoryWarningThreshold: 95
                     property int swapWarningThreshold: 85
                     property int cpuWarningThreshold: 90
+                    // === CUSTOM MODIFICATION START: GPU Warning Threshold ===
+                    property int gpuWarningThreshold: 90
+                    // === CUSTOM MODIFICATION END: GPU Warning Threshold ==
                 }
                 property list<string> screenList: [] // List of names, like "eDP-1", find out with 'hyprctl monitors' command
                 property JsonObject utilButtons: JsonObject {
@@ -244,6 +251,12 @@ Singleton {
                     property bool useUSCS: false // Instead of metric (SI) units
                     property int fetchInterval: 10 // minutes
                 }
+                // === CUSTOM MODIFICATION START: Network Speed Configuration ===
+                property JsonObject networkSpeed: JsonObject {
+                    property bool enable: true
+                    property string interfaceName: "auto" // "auto" or specific interface name like "wlan0"
+                }
+                // === CUSTOM MODIFICATION END: Network Speed Configuration ===
                 property JsonObject indicators: JsonObject {
                     property JsonObject notifications: JsonObject {
                         property bool showUnreadCount: false
