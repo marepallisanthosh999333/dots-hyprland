@@ -25,7 +25,6 @@ import qs.modules.screenCorners
 import qs.modules.sessionScreen
 import qs.modules.sidebarLeft
 import qs.modules.sidebarRight
-import qs.modules.stickypad
 import qs.modules.verticalBar
 import qs.modules.wallpaperSelector
 
@@ -55,7 +54,6 @@ ShellRoot {
     property bool enableSessionScreen: true
     property bool enableSidebarLeft: true
     property bool enableSidebarRight: true
-    property bool enableStickypad: true
     property bool enableVerticalBar: true
     property bool enableWallpaperSelector: true
 
@@ -87,7 +85,6 @@ ShellRoot {
     LazyLoader { active: enableSessionScreen; component: SessionScreen {} }
     LazyLoader { active: enableSidebarLeft; component: SidebarLeft {} }
     LazyLoader { active: enableSidebarRight; component: SidebarRight {} }
-    LazyLoader { active: enableStickypad; component: Stickypad {} }
     LazyLoader { active: enableVerticalBar && Config.ready && Config.options.bar.vertical; component: VerticalBar {} }
     LazyLoader { active: enableWallpaperSelector; component: WallpaperSelector {} }
 }
