@@ -10,20 +10,32 @@ import Quickshell.Io
  * Simple polled resource usage service with RAM, Swap, and CPU usage.
  */
 Singleton {
-	property double memoryTotal: 1
-	property double memoryFree: 1
-	property double memoryUsed: memoryTotal - memoryFree
-    property double memoryUsedPercentage: memoryUsed / memoryTotal
-    property double swapTotal: 1
-	property double swapFree: 1
-	property double swapUsed: swapTotal - swapFree
-    property double swapUsedPercentage: swapTotal > 0 ? (swapUsed / swapTotal) : 0
-    property double cpuUsage: 0
+    id: root
+    property real memoryTotal: 1
+    property real memoryFree: 0
+    property real memoryUsed: memoryTotal - memoryFree
+    property real memoryUsedPercentage: memoryUsed / memoryTotal
+    property real swapTotal: 1
+    property real swapFree: 0
+    property real swapUsed: swapTotal - swapFree
+    property real swapUsedPercentage: swapTotal > 0 ? (swapUsed / swapTotal) : 0
+    property real cpuUsage: 0
     // === CUSTOM MODIFICATION START: CPU Frequency and Temperature Support ===
     property double cpuFrequency: 0
     property double cpuTemperature: 0
     // === CUSTOM MODIFICATION END: CPU Frequency and Temperature Support ===
     property var previousCpuStats
+
+    // === UPSTREAM: History tracking properties ===
+    property string maxAvailableMemoryString: kbToGbString(ResourceUsage.memoryTotal)
+    property string maxAvailableSwapString: kbToGbString(ResourceUsage.swapTotal)
+    property string maxAvailableCpuString: "--"
+
+    readonly property int historyLength: Config?.options.resources.historyLength ?? 60
+    property list<real> cpuUsageHistory: []
+    property list<real> memoryUsageHistory: []
+    property list<real> swapUsageHistory: []
+    // === END UPSTREAM ===
 
     // === CUSTOM MODIFICATION START: Intel GPU Properties ===
     property bool iGpuAvailable: true
@@ -68,11 +80,41 @@ Singleton {
     property string mainDiskDevice: ""
     // === CUSTOM MODIFICATION END: Disk Monitoring Properties ===
 
-	Timer {
-		interval: 1
+    // === UPSTREAM: History helper functions ===
+    function kbToGbString(kb) {
+        return (kb / (1024 * 1024)).toFixed(1) + " GB";
+    }
+
+    function updateMemoryUsageHistory() {
+        memoryUsageHistory = [...memoryUsageHistory, memoryUsedPercentage]
+        if (memoryUsageHistory.length > historyLength) {
+            memoryUsageHistory.shift()
+        }
+    }
+    function updateSwapUsageHistory() {
+        swapUsageHistory = [...swapUsageHistory, swapUsedPercentage]
+        if (swapUsageHistory.length > historyLength) {
+            swapUsageHistory.shift()
+        }
+    }
+    function updateCpuUsageHistory() {
+        cpuUsageHistory = [...cpuUsageHistory, cpuUsage]
+        if (cpuUsageHistory.length > historyLength) {
+            cpuUsageHistory.shift()
+        }
+    }
+    function updateHistories() {
+        updateMemoryUsageHistory()
+        updateSwapUsageHistory()
+        updateCpuUsageHistory()
+    }
+    // === END UPSTREAM ===
+
+    Timer {
+        interval: 1
         running: true 
         repeat: true
-		onTriggered: {
+        onTriggered: {
             // Reload files
             fileMeminfo.reload()
             fileStat.reload()
@@ -137,15 +179,33 @@ Singleton {
             diskInfoProc.running = true
             // === CUSTOM MODIFICATION END: Process Disk info ===
 
+            // === UPSTREAM: Update history tracking ===
+            root.updateHistories()
+            // === END UPSTREAM ===
+
             interval = Config.options?.resources?.updateInterval ?? 3000
         }
-	}
+    }
 
-	FileView { id: fileMeminfo; path: "/proc/meminfo" }
+    FileView { id: fileMeminfo; path: "/proc/meminfo" }
     FileView { id: fileStat; path: "/proc/stat" }
     // === CUSTOM MODIFICATION START: Add CPU info file ===
     FileView { id: fileCpuinfo; path: "/proc/cpuinfo" }
     // === CUSTOM MODIFICATION END: Add CPU info file ===
+
+    // === UPSTREAM: CPU max frequency detection ===
+    Process {
+        id: findCpuMaxFreqProc
+        command: ["bash", "-c", "lscpu | grep 'CPU max MHz' | awk '{print $4}'"]
+        running: true
+        stdout: StdioCollector {
+            id: outputCollector
+            onStreamFinished: {
+                root.maxAvailableCpuString = (parseFloat(outputCollector.text) / 1000).toFixed(0) + " GHz"
+            }
+        }
+    }
+    // === END UPSTREAM ===
 
     // === CUSTOM MODIFICATION START: CPU Temperature Process ===
     Process {
