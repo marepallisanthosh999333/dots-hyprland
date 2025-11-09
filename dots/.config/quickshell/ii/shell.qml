@@ -11,7 +11,6 @@ import qs.modules.common
 import qs.modules.background
 import qs.modules.bar
 import qs.modules.cheatsheet
-import qs.modules.crosshair
 import qs.modules.dock
 import qs.modules.lock
 import qs.modules.mediaControls
@@ -25,7 +24,7 @@ import qs.modules.screenCorners
 import qs.modules.sessionScreen
 import qs.modules.sidebarLeft
 import qs.modules.sidebarRight
-import qs.modules.stickypad
+import qs.modules.overlay
 import qs.modules.verticalBar
 import qs.modules.wallpaperSelector
 
@@ -40,7 +39,6 @@ ShellRoot {
     property bool enableBar: true
     property bool enableBackground: true
     property bool enableCheatsheet: true
-    property bool enableCrosshair: true
     property bool enableDock: true
     property bool enableLock: true
     property bool enableMediaControls: true
@@ -48,6 +46,7 @@ ShellRoot {
     property bool enablePolkit: true
     property bool enableOnScreenDisplay: true
     property bool enableOnScreenKeyboard: true
+    property bool enableOverlay: true
     property bool enableOverview: true
     property bool enableRegionSelector: true
     property bool enableReloadPopup: true
@@ -55,7 +54,6 @@ ShellRoot {
     property bool enableSessionScreen: true
     property bool enableSidebarLeft: true
     property bool enableSidebarRight: true
-    property bool enableStickypad: true
     property bool enableVerticalBar: true
     property bool enableWallpaperSelector: true
 
@@ -72,13 +70,13 @@ ShellRoot {
     LazyLoader { active: enableBar && Config.ready && !Config.options.bar.vertical; component: Bar {} }
     LazyLoader { active: enableBackground; component: Background {} }
     LazyLoader { active: enableCheatsheet; component: Cheatsheet {} }
-    LazyLoader { active: enableCrosshair; component: Crosshair {} }
     LazyLoader { active: enableDock && Config.options.dock.enable; component: Dock {} }
     LazyLoader { active: enableLock; component: Lock {} }
     LazyLoader { active: enableMediaControls; component: MediaControls {} }
     LazyLoader { active: enableNotificationPopup; component: NotificationPopup {} }
     LazyLoader { active: enableOnScreenDisplay; component: OnScreenDisplay {} }
     LazyLoader { active: enableOnScreenKeyboard; component: OnScreenKeyboard {} }
+    LazyLoader { active: enableOverlay; component: Overlay {} }
     LazyLoader { active: enableOverview; component: Overview {} }
     LazyLoader { active: enablePolkit; component: Polkit {} }
     LazyLoader { active: enableRegionSelector; component: RegionSelector {} }
@@ -87,7 +85,6 @@ ShellRoot {
     LazyLoader { active: enableSessionScreen; component: SessionScreen {} }
     LazyLoader { active: enableSidebarLeft; component: SidebarLeft {} }
     LazyLoader { active: enableSidebarRight; component: SidebarRight {} }
-    LazyLoader { active: enableStickypad; component: Stickypad {} }
     LazyLoader { active: enableVerticalBar && Config.ready && Config.options.bar.vertical; component: VerticalBar {} }
     LazyLoader { active: enableWallpaperSelector; component: WallpaperSelector {} }
 }
