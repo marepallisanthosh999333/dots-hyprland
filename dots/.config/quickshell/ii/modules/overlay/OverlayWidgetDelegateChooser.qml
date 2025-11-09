@@ -11,6 +11,7 @@ import qs.modules.overlay.volumeMixer
 import qs.modules.overlay.fpsLimiter
 import qs.modules.overlay.recorder
 import qs.modules.overlay.resources
+import qs.modules.overlay.stickypad
 
 DelegateChooser {
     id: root
@@ -21,4 +22,5 @@ DelegateChooser {
     DelegateChoice { roleValue: "fpsLimiter"; FpsLimiter {} }
     DelegateChoice { roleValue: "recorder"; Recorder {} }
     DelegateChoice { roleValue: "resources"; Resources {} }
+    DelegateChoice { roleValue: "stickypad"; Stickypad {} }
 }

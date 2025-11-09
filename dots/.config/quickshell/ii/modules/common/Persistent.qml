@@ -123,6 +123,12 @@ Singleton {
                     property real width: 280
                     property real height: 80
                 }
+                property JsonObject stickypad: JsonObject {
+                    property bool pinned: true
+                    property bool clickthrough: false
+                    property real x: 100
+                    property real y: 100
+                }
             }
 
             property JsonObject timer: JsonObject {
