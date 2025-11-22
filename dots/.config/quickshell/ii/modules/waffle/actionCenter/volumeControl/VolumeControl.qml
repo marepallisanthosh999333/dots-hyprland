@@ -10,7 +10,7 @@ import qs.modules.common.widgets
 import qs.modules.waffle.looks
 import qs.modules.waffle.actionCenter
 
-Rectangle {
+Item {
     id: root
     implicitWidth: 360
     implicitHeight: 352
@@ -58,7 +58,6 @@ Rectangle {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
                 }
-                inset: 0
                 implicitHeight: 40
                 implicitWidth: contentItem.implicitWidth + 30
                 color: "transparent"

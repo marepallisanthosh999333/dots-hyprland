@@ -16,6 +16,7 @@ Button {
     property color colBackgroundToggledHover: Looks.colors.accentHover
     property color colBackgroundToggledActive: Looks.colors.accentActive
     property color colForeground: Looks.colors.fg
+    property color colForegroundToggled: Looks.colors.accentFg
     property alias backgroundOpacity: backgroundRect.opacity
     property color color: {
         if (root.checked) {
@@ -35,25 +36,32 @@ Button {
             return root.colBackground;
         }
     }
+    property color fgColor: root.checked ? root.colForegroundToggled : root.colForeground
+    property alias horizontalAlignment: buttonText.horizontalAlignment
+    font {
+        family: Looks.font.family.ui
+        pixelSize: Looks.font.pixelSize.large
+        weight: Looks.font.weight.regular
+    }
 
     // Hover stuff
-    signal hoverTimedOut()
+    signal hoverTimedOut
     property bool shouldShowTooltip: false
     property Timer hoverTimer: Timer {
         id: hoverTimer
         running: root.hovered
         interval: 400
         onTriggered: {
-            root.hoverTimedOut()
+            root.hoverTimedOut();
         }
     }
     onHoverTimedOut: {
-        root.shouldShowTooltip = true
+        root.shouldShowTooltip = true;
     }
     onHoveredChanged: {
         if (!root.hovered) {
-            root.shouldShowTooltip = false
-            root.hoverTimer.stop()
+            root.shouldShowTooltip = false;
+            root.hoverTimer.stop();
         }
     }
 
@@ -64,7 +72,7 @@ Button {
     property var altAction: () => {}
     property var middleClickAction: () => {}
 
-    property real inset: 2
+    property real inset: 0
     topInset: inset
     bottomInset: inset
     leftInset: inset
@@ -77,8 +85,8 @@ Button {
     property alias border: backgroundRect.border
     horizontalPadding: 10
     verticalPadding: 6
-    implicitHeight: contentItem.implicitHeight + verticalPadding * 2
-    implicitWidth: contentItem.implicitWidth + horizontalPadding * 2
+    implicitHeight: contentItem.implicitHeight + verticalPadding * 2 + topInset + bottomInset
+    implicitWidth: contentItem.implicitWidth + horizontalPadding * 2 + leftInset + rightInset
 
     background: Rectangle {
         id: backgroundRect
@@ -92,10 +100,13 @@ Button {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton | Qt.MiddleButton
-        onClicked: (event) => {
-            if (event.button === Qt.LeftButton) root.clicked();
-            if (event.button === Qt.RightButton) root.altAction();
-            if (event.button === Qt.MiddleButton) root.middleClickAction();
+        onClicked: event => {
+            if (event.button === Qt.LeftButton)
+                root.clicked();
+            if (event.button === Qt.RightButton)
+                root.altAction();
+            if (event.button === Qt.MiddleButton)
+                root.middleClickAction();
         }
     }
 
@@ -122,18 +133,17 @@ Button {
                 Layout.fillWidth: false
                 Layout.alignment: Qt.AlignVCenter
                 icon: root.icon.name
-                color: root.colForeground
+                color: root.fgColor
                 visible: root.icon.name !== ""
             }
             WText {
+                id: buttonText
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 text: root.text
                 horizontalAlignment: Text.AlignLeft
-                font {
-                    pixelSize: Looks.font.pixelSize.large
-                }
-                color: root.colForeground
+                font: root.font
+                color: root.fgColor
             }
         }
     }

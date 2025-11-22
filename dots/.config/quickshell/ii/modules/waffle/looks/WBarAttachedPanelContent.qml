@@ -25,6 +25,10 @@ Item {
     implicitHeight: borderRect.implicitHeight
     implicitWidth: borderRect.implicitWidth
 
+    WRectangularShadow {
+        target: borderRect
+    }
+
     Rectangle {
         id: borderRect
         z: 1
@@ -78,9 +82,8 @@ Item {
         }
     }
 
-    Rectangle {
+    Item {
         id: contentArea
-        color: "red"
         z: 0
         anchors.fill: borderRect
         anchors.margins: borderRect.border.width
