@@ -61,22 +61,7 @@ Singleton {
     // === CUSTOM MODIFICATION END: Fan Monitoring Properties ===
 
     // === CUSTOM MODIFICATION START: Disk Monitoring Properties ===
-    property string disk1Name: ""
-    property string disk1Used: ""
-    property string disk1Size: ""
-    property int disk1Usage: 0
-    property string disk2Name: ""
-    property string disk2Used: ""
-    property string disk2Size: ""
-    property int disk2Usage: 0
-    property string disk3Name: ""
-    property string disk3Used: ""
-    property string disk3Size: ""
-    property int disk3Usage: 0
-    property string disk4Name: ""
-    property string disk4Used: ""
-    property string disk4Size: ""
-    property int disk4Usage: 0
+    property var diskPartitions: []  // Array of {name, used, size, usage} objects
     property string mainDiskDevice: ""
     // === CUSTOM MODIFICATION END: Disk Monitoring Properties ===
 
@@ -304,33 +289,25 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = this.text.trim().split('\n')
-                let diskIndex = 0
+                let partitions = []
                 
                 for (const line of lines) {
                     if (line.startsWith('Partition:')) {
-                        // Format: Partition:name:used:size:usage
                         const parts = line.split(':')
-                        if (parts.length >= 5 && diskIndex < 4) {
-                            const name = parts[1]
-                            const used = parts[2] 
-                            const size = parts[3]
-                            const usage = Number(parts[4])
-                            
-                            if (diskIndex === 0) {
-                                disk1Name = name; disk1Used = used; disk1Size = size; disk1Usage = usage
-                            } else if (diskIndex === 1) {
-                                disk2Name = name; disk2Used = used; disk2Size = size; disk2Usage = usage
-                            } else if (diskIndex === 2) {
-                                disk3Name = name; disk3Used = used; disk3Size = size; disk3Usage = usage
-                            } else if (diskIndex === 3) {
-                                disk4Name = name; disk4Used = used; disk4Size = size; disk4Usage = usage
-                            }
-                            diskIndex++
+                        if (parts.length >= 5) {
+                            partitions.push({
+                                name: parts[1],
+                                used: parts[2],
+                                size: parts[3],
+                                usage: Number(parts[4])
+                            })
                         }
                     } else if (line.startsWith('MainDisk:')) {
                         mainDiskDevice = line.split(':')[1] || ""
                     }
                 }
+                
+                diskPartitions = partitions
             }
         }
     }
