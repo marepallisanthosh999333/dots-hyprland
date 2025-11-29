@@ -1,6 +1,7 @@
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
+import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 
@@ -271,40 +272,26 @@ StyledPopup {
 
         // === CUSTOM MODIFICATION START: Disk Storage Column ===
         Column {
-            visible: ResourceUsage.disk1Name !== ""
             anchors.top: parent.top
             spacing: 8
-
             ResourceHeaderItem {
                 icon: "storage"
                 label: "Storage"
             }
+
             Column {
                 spacing: 4
-                ResourceItem {
-                    visible: ResourceUsage.disk1Name !== ""
-                    icon: ResourceUsage.disk1Name === "Root" ? "home" : "hard_drive"
-                    label: `${ResourceUsage.disk1Name}:`
-                    value: `${ResourceUsage.disk1Used}/${ResourceUsage.disk1Size} (${ResourceUsage.disk1Usage}%)`
+
+                Repeater {
+                    model: ResourceUsage.diskPartitions
+                    delegate: ResourceItem {
+                        required property var modelData
+                        icon: (modelData.name === "Root") ? "home" : (modelData.name === "home") ? "folder" : (modelData.name === "boot") ? "settings" : "hard_drive"
+                        label: modelData.name + ":"
+                        value: modelData.used + "/" + modelData.size + " (" + modelData.usage + "%)"
+                    }
                 }
-                ResourceItem {
-                    visible: ResourceUsage.disk2Name !== ""
-                    icon: ResourceUsage.disk2Name === "home" ? "folder" : ResourceUsage.disk2Name === "boot" ? "settings" : "hard_drive"
-                    label: `${ResourceUsage.disk2Name}:`
-                    value: `${ResourceUsage.disk2Used}/${ResourceUsage.disk2Size} (${ResourceUsage.disk2Usage}%)`
-                }
-                ResourceItem {
-                    visible: ResourceUsage.disk3Name !== ""
-                    icon: "hard_drive"
-                    label: `${ResourceUsage.disk3Name}:`
-                    value: `${ResourceUsage.disk3Used}/${ResourceUsage.disk3Size} (${ResourceUsage.disk3Usage}%)`
-                }
-                ResourceItem {
-                    visible: ResourceUsage.disk4Name !== ""
-                    icon: "hard_drive"
-                    label: `${ResourceUsage.disk4Name}:`
-                    value: `${ResourceUsage.disk4Used}/${ResourceUsage.disk4Size} (${ResourceUsage.disk4Usage}%)`
-                }
+
                 ResourceItem {
                     icon: "device_thermostat"
                     label: Translation.tr("Device:")
