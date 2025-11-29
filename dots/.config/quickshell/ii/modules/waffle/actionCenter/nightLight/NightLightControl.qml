@@ -24,7 +24,7 @@ Item {
         Bluetooth.defaultAdapter.discovering = false;
     }
 
-    PageColumn {
+    WPanelPageColumn {
         anchors.fill: parent
 
         BodyRectangle {
@@ -61,7 +61,7 @@ Item {
             }
         }
 
-        Separator {}
+        WPanelSeparator {}
 
         FooterRectangle {}
     }
@@ -84,7 +84,7 @@ Item {
         }
 
         ToggleItem {
-            name: Translation.tr("Enable")
+            name: Translation.tr("Enable now")
             description: Translation.tr("More comfortable viewing at night")
             iconName: WIcons.nightLightIcon
             checked: Hyprsunset.active

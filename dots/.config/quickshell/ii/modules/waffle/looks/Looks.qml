@@ -17,10 +17,10 @@ Singleton {
     property string iconsPath: `${Directories.assetsPath}/icons/fluent`
     property bool dark: Appearance.m3colors.darkmode
 
-    property real backgroundTransparency: 0.11
+    property real backgroundTransparency: 0.13
     property real panelBackgroundTransparency: 0.12
     property real panelLayerTransparency: root.dark ? 0.9 : 0.7
-    property real contentTransparency: root.dark ? 0.9 : 0.5
+    property real contentTransparency: root.dark ? 0.87 : 0.5
     function applyBackgroundTransparency(col) {
         return ColorUtils.applyAlpha(col, 1 - root.backgroundTransparency)
     }
@@ -41,8 +41,8 @@ Singleton {
         property color bg1Border: '#d7d7d7'
         property color bg2: "#FBFBFB"
         property color bg2Base: "#FBFBFB"
-        property color bg2Hover: "#FDFDFD"
-        property color bg2Active: "#FDFDFD"
+        property color bg2Hover: '#ffffff'
+        property color bg2Active: '#eeeeee'
         property color bg2Border: '#cdcdcd'
         property color subfg: "#5C5C5C"
         property color fg: "#000000"
@@ -53,6 +53,7 @@ Singleton {
         property color controlBgHover: '#57575B'
         property color controlFg: "#FFFFFF"
         property color accentUnfocused: "#848484"
+        property color link: "#235CCF"
     }
     darkColors: QtObject {
         id: darkColors
@@ -80,10 +81,11 @@ Singleton {
         property color controlBgHover: "#CFCED1"
         property color controlFg: "#454545"
         property color accentUnfocused: "#989898"
+        property color link: "#A7C9FC"
     }
     colors: QtObject {
         id: colors
-        property color shadow: ColorUtils.transparentize("#000000", 0.62)
+        property color shadow: ColorUtils.transparentize('#161616', 0.62)
         property color ambientShadow: ColorUtils.transparentize("#000000", 0.75)
         property color bgPanelFooterBase: ColorUtils.transparentize(root.dark ? root.darkColors.bgPanelFooter : root.lightColors.bgPanelFooter, root.panelBackgroundTransparency)
         property color bgPanelFooter: ColorUtils.transparentize(root.dark ? root.darkColors.bgPanelFooter : root.lightColors.bgPanelFooter, root.panelLayerTransparency)
@@ -110,6 +112,7 @@ Singleton {
         property color controlBg: root.dark ? root.darkColors.controlBg : root.lightColors.controlBg
         property color controlBgHover: root.dark ? root.darkColors.controlBgHover : root.lightColors.controlBgHover
         property color controlFg: root.dark ? root.darkColors.controlFg : root.lightColors.controlFg
+        property color link: root.dark ? root.darkColors.link : root.lightColors.link
         property color danger: "#C42B1C"
         property color dangerActive: "#B62D1F"
         property color warning: "#FF9900"
@@ -229,6 +232,14 @@ Singleton {
                 duration: 1000
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: transition.easing.bezierCurve.easeIn
+            }
+        }
+
+        property Component scroll: Component {
+            NumberAnimation {
+                duration: 250
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: [0.0, 0.0, 0.25, 1.0, 1, 1]
             }
         }
     }
