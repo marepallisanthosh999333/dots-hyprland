@@ -44,7 +44,7 @@ Rectangle {
             target: root
             property: "openProgress"
             to: 0
-            duration: 200
+            duration: 250
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Looks.transition.easing.bezierCurve.easeIn
         }
@@ -231,7 +231,7 @@ Rectangle {
             anchors.fill: parent
             anchors.margins: wsBorder.border.width
             radius: wsBorder.radius - wsBorder.border.width
-            color: Looks.colors.bgPanelFooterBase
+            color: Looks.colors.bgPanelFooterBackground
 
             implicitHeight: 174
 
