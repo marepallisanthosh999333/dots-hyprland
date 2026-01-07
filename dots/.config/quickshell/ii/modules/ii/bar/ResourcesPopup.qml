@@ -8,10 +8,15 @@ import QtQuick.Layouts
 StyledPopup {
     id: root
 
+    // === CUSTOM MODIFICATION START: Enable dynamic popup positioning ===
+    clampToScreen: true
+    // === CUSTOM MODIFICATION END: Enable dynamic popup positioning ===
+
     // Helper function to format KB to GB
     function formatKB(kb) {
         return (kb / (1024 * 1024)).toFixed(1) + " GB";
     }
+
 
     // === CUSTOM MODIFICATION START: Network Speed Formatting Helper ===
     // Helper function to format network speed
