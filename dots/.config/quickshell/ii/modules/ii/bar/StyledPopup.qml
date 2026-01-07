@@ -12,6 +12,7 @@ LazyLoader {
     property Item hoverTarget
     default property Item contentItem
     property real popupBackgroundMargin: 0
+    property bool clampToScreen: false  // Set to true to clamp popup position within screen bounds
 
     active: hoverTarget && hoverTarget.containsMouse
 
@@ -35,10 +36,22 @@ LazyLoader {
         exclusiveZone: 0
         margins {
             left: {
-                if (!Config.options.bar.vertical) return root.QsWindow?.mapFromItem(
-                    root.hoverTarget, 
-                    (root.hoverTarget.width - popupBackground.implicitWidth) / 2, 0
-                ).x;
+                if (!Config.options.bar.vertical) {
+                    let idealX = root.QsWindow?.mapFromItem(
+                        root.hoverTarget, 
+                        (root.hoverTarget.width - popupBackground.implicitWidth) / 2, 0
+                    ).x ?? 0;
+                    
+                    // Clamp to screen bounds if enabled
+                    if (root.clampToScreen) {
+                        const screenWidth = popupWindow.screen?.width ?? 1920;
+                        const popupWidth = popupWindow.implicitWidth;
+                        const minMargin = 5;
+                        const maxMargin = screenWidth - popupWidth - minMargin;
+                        idealX = Math.max(minMargin, Math.min(idealX, maxMargin));
+                    }
+                    return idealX;
+                }
                 return Appearance.sizes.verticalBarWidth
             }
             top: {
