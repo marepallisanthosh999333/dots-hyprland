@@ -13,7 +13,7 @@ LazyLoader {
     default property Item contentItem
     property real popupBackgroundMargin: 0
     property bool clampToScreen: false  // Set to true to clamp popup position within screen bounds
-
+    property int popupRadius: Appearance.rounding.large
     active: hoverTarget && hoverTarget.containsMouse
 
     component: PanelWindow {
@@ -84,7 +84,7 @@ LazyLoader {
             implicitWidth: root.contentItem.implicitWidth + margin * 2
             implicitHeight: root.contentItem.implicitHeight + margin * 2
             color: Appearance.m3colors.m3surfaceContainer
-            radius: Appearance.rounding.small
+            radius: root.popupRadius
             children: [root.contentItem]
 
             border.width: 1

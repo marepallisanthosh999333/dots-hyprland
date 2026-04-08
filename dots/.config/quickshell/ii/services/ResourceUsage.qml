@@ -53,13 +53,6 @@ Singleton {
     property double networkTotalSpeed: 0     // bytes per second
     // === CUSTOM MODIFICATION END: Network Speed Properties ===
 
-    // === CUSTOM MODIFICATION START: Fan Monitoring Properties ===
-    property int fanCount: 0
-    property double fanActivity: 0         // Average fan activity percentage
-    property double fanTemperature: 0      // Average fan temperature
-    property double fanMaxActivity: 0      // Peak fan activity
-    // === CUSTOM MODIFICATION END: Fan Monitoring Properties ===
-
     // === CUSTOM MODIFICATION START: Disk Monitoring Properties ===
     property var diskPartitions: []  // Array of {name, used, size, usage} objects
     property string mainDiskDevice: ""
@@ -155,10 +148,6 @@ Singleton {
             // === CUSTOM MODIFICATION START: Process Network speed info ===
             networkSpeedProc.running = true
             // === CUSTOM MODIFICATION END: Process Network speed info ===
-
-            // === CUSTOM MODIFICATION START: Process Fan info ===
-            fanInfoProc.running = true
-            // === CUSTOM MODIFICATION END: Process Fan info ===
 
             // === CUSTOM MODIFICATION START: Process Disk info ===
             diskInfoProc.running = true
@@ -259,30 +248,6 @@ Singleton {
         }
     }
     // === CUSTOM MODIFICATION END: Network Speed Monitoring Process ===
-
-    // === CUSTOM MODIFICATION START: Fan Monitoring Process ===
-    Process {
-        id: fanInfoProc
-        command: ["bash", "-c", `${Directories.scriptPath}/system/get_faninfo_thermal.sh`.replace(/file:\/\//, "")]
-        running: false
-
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const countLine = this.text.match(/Fan Count:\s*(\d+)/)
-                fanCount = Number(countLine?.[1] ?? 0)
-                
-                const activityLine = this.text.match(/Fan Activity:\s*(\d+(?:\.\d+)?)%/)
-                fanActivity = Number(activityLine?.[1] ?? 0) / 100
-                
-                const tempLine = this.text.match(/Fan Temperature:\s*(\d+(?:\.\d+)?)°C/)
-                fanTemperature = Number(tempLine?.[1] ?? 0)
-                
-                const maxActivityLine = this.text.match(/Max Activity:\s*(\d+(?:\.\d+)?)%/)
-                fanMaxActivity = Number(maxActivityLine?.[1] ?? 0) / 100
-            }
-        }
-    }
-    // === CUSTOM MODIFICATION END: Fan Monitoring Process ===
 
     // === CUSTOM MODIFICATION START: Disk Monitoring Process ===
     Process {

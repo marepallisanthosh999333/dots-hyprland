@@ -6,9 +6,8 @@ import QtQuick.Layouts
 
 Item {
     id: root
-    property bool borderless: Config.options.bar.borderless
     property bool showDate: Config.options.bar.verbose
-    implicitWidth: rowLayout.implicitWidth
+    implicitWidth: rowLayout.implicitWidth + rowLayout.spacing * 10
     implicitHeight: Appearance.sizes.barHeight
 
     RowLayout {
@@ -42,8 +41,21 @@ Item {
         anchors.fill: parent
         hoverEnabled: !Config.options.bar.tooltips.clickToShow
 
-        ClockWidgetPopup {
-            hoverTarget: mouseArea
+        Loader {
+            active: true
+            sourceComponent: Config.options.bar.tooltips.compactPopups ? clockPopupCompact : clockPopup
+        }
+        Component {
+            id: clockPopup
+            ClockWidgetPopup {
+                hoverTarget: mouseArea
+            }
+        }
+        Component {
+            id: clockPopupCompact
+            ClockWidgetPopupCompact {
+                hoverTarget: mouseArea
+            }
         }
     }
 }

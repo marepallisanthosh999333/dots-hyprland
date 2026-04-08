@@ -1,0 +1,69 @@
+import QtQuick
+import QtQuick.Layouts
+
+import qs.modules.common
+import qs.modules.common.widgets
+
+Rectangle {
+    id: root
+
+    radius: Appearance.rounding.normal
+    color: Appearance.colors.colSurfaceContainerHigh
+    implicitWidth: rowLayout.implicitWidth + 24
+    implicitHeight: rowLayout.implicitHeight + 20
+    Layout.fillWidth: true
+
+    property alias title: title.text
+    property alias value: value.text
+    property string symbol: ""
+    property string shapeString: "Slanted"
+    property color accentColor: Appearance.colors.colPrimaryContainer
+    property color symbolColor: Appearance.colors.colOnPrimaryContainer    
+
+    RowLayout {
+        id: rowLayout
+        spacing: 12
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+            leftMargin: 12
+        }
+
+        MaterialShape {
+            shape: MaterialShape.Shape.Slanted
+            implicitSize: 36
+            color: root.accentColor
+
+            MaterialSymbol {
+                id: symbolIcon
+                anchors.centerIn: parent
+                text: root.symbol
+                fill: 0
+                iconSize: Appearance.font.pixelSize.normal
+                color: root.symbolColor
+            }
+        }
+
+        ColumnLayout {
+            spacing: -2
+
+            StyledText {
+                id: title
+                font.pixelSize: Appearance.font.pixelSize.smaller
+                color: Appearance.colors.colOnSurfaceVariant
+                font.weight: Font.DemiBold
+            }
+
+            StyledText {
+                id: value
+                font.pixelSize: Appearance.font.pixelSize.small
+                color: Appearance.colors.colOnSurface
+                font.weight: Font.Bold
+            }
+            
+            Item {
+                Layout.fillWidth: true
+            }
+        }
+    }
+}

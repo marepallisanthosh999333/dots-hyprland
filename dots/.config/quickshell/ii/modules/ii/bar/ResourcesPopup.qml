@@ -239,42 +239,6 @@ StyledPopup {
         }
         // === CUSTOM MODIFICATION END: Network Speed Column ===
 
-        // === CUSTOM MODIFICATION START: Fan Monitoring Column ===
-        Column {
-            visible: ResourceUsage.fanCount > 0
-            anchors.top: parent.top
-            spacing: 8
-
-            ResourceHeaderItem {
-                icon: "mode_fan"
-                label: "Fans"
-            }
-            Column {
-                spacing: 4
-                ResourceItem {
-                    icon: "bolt"
-                    label: Translation.tr("Activity:")
-                    value: (ResourceUsage.fanActivity > 0.8 ? Translation.tr("High") : ResourceUsage.fanActivity > 0.4 ? Translation.tr("Medium") : Translation.tr("Low")) + ` (${Math.round(ResourceUsage.fanActivity * 100)}%)`
-                }
-                ResourceItem {
-                    icon: "trending_up"
-                    label: Translation.tr("Peak:")
-                    value: `${Math.round(ResourceUsage.fanMaxActivity * 100)}%`
-                }
-                ResourceItem {
-                    icon: "device_thermostat"
-                    label: Translation.tr("Count:")
-                    value: `${ResourceUsage.fanCount} fans`
-                }
-                ResourceItem {
-                    icon: "thermometer"
-                    label: Translation.tr("Temp:")
-                    value: `${Math.round(ResourceUsage.fanTemperature)} °C`
-                }
-            }
-        }
-        // === CUSTOM MODIFICATION END: Fan Monitoring Column ===
-
         // === CUSTOM MODIFICATION START: Disk Storage Column ===
         Column {
             anchors.top: parent.top
