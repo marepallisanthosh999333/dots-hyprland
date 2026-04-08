@@ -44,20 +44,18 @@ StyledPopup {
         return futureHours.slice(0, maxHourlyBars);
     }
 
+    readonly property string city: Weather.data.city
+    onCityChanged: {
+        if (Weather.data.city)
+            root.fetchForecast();
+    }
+
     function fetchForecast() {
         forecastLoading = true;
-        let target = "auto";
-        if (Weather.gpsActive && Weather.location.valid) {
-            target = `${Weather.location.lat},${Weather.location.long}`;
-        } else {
-            let city = Config.options.bar.weather.city;
-            if (city && city.trim() !== "") {
-                target = city.trim().split(/\s+/).join('+');
-            } else if (Weather.data.city && Weather.data.city !== "--" && Weather.data.city !== "City") {
-                target = Weather.data.city.trim().split(/\s+/).join('+');
-            }
-        }
-        forecastFetcher.command[2] = `curl -s "wttr.in/${target}?format=j1" | jq '{daily: [.weather[] | {date: .date, maxC: .maxtempC, minC: .mintempC, maxF: .maxtempF, minF: .mintempF, code: .hourly[4].weatherCode}], hourly: [.weather[0].hourly[], .weather[1].hourly[] | {time: .time, tempC: .tempC, tempF: .tempF, code: .weatherCode}]}'`;
+        let city = Weather.data.city || "auto";
+        //console.log(`[WeatherPopup] Fetching forecast for city: ${city}`);
+        city = city.trim().split(/\s+/).join('+');
+        forecastFetcher.command[2] = `curl -s "wttr.in/${city}?format=j1" | jq '{daily: [.weather[] | {date: .date, maxC: .maxtempC, minC: .mintempC, maxF: .maxtempF, minF: .mintempF, code: .hourly[4].weatherCode}], hourly: [.weather[0].hourly[], .weather[1].hourly[] | {time: .time, tempC: .tempC, tempF: .tempF, code: .weatherCode}]}'`;
         forecastFetcher.running = true;
     }
 
@@ -100,13 +98,6 @@ StyledPopup {
         id: contentLayout
         anchors.centerIn: parent
         spacing: 12
-
-        Connections {
-            target: Weather
-            function onDataChanged() {
-                root.fetchForecast();
-            }
-        }
 
         Process {
             id: forecastFetcher
