@@ -26,7 +26,7 @@ Singleton {
     property var location: ({
         valid: false,
         lat: 0,
-        lon: 0
+        long: 0
     })
 
     property var data: ({
