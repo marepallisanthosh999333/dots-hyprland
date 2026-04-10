@@ -23,6 +23,18 @@ Singleton {
         root.getData();
     }
 
+    onGpsActiveChanged: {
+        if (root.gpsActive) {
+            console.info("[WeatherService] Starting the GPS service.");
+            positionSource.start();
+        } else {
+            console.info("[WeatherService] Stopping the GPS service.");
+            positionSource.stop();
+            root.location.valid = false;
+            root.getData();
+        }
+    }
+
     property var location: ({
         valid: false,
         lat: 0,
